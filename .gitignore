@@ -1,0 +1,6 @@
+nohup.out
+__pycache__
+.ipynb_checkpoints/
+.vscode/
+.pytest_cache/
+test_data/
