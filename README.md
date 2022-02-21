@@ -1,0 +1,2 @@
+# Identificação de organismos potencialmente patogênicos em sequenciamento de viroma
+> Este repositório é um trabalho em progresso. O produto final será um algoritmo de aprendizado de máquina para predizer quais espécies são patogênicas em dados de metagenômica/metatranscriptômica.
