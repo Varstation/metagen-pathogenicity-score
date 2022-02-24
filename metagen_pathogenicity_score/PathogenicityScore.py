@@ -154,4 +154,3 @@ def kwargs_starting_with(prefix, kwargs):
     # searches keyword arguments containing some prefix ending in '_', removes
     # the underscore and returns a dictionary with the results
     return {"_".join(key.split("_")[1:]):value for key, value in kwargs.items() if key.startswith(prefix)}
-

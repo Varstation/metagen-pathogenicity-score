@@ -1,5 +1,5 @@
 import unittest
-from src.PathogenicityScore import FeatureExtractor
+from metagen_pathogenicity_score.PathogenicityScore import FeatureExtractor
 import xarray as xr
 import numpy as np
 
