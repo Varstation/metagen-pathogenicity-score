@@ -5,9 +5,6 @@ from sklearn.preprocessing import RobustScaler
 from sklearn.pipeline import make_pipeline
 import pandas as pd
 
-from ete3 import NCBITaxa
-ncbi = NCBITaxa()
-
 class FeatureExtractor:
     def __init__(self, n_components, *args, **kwargs):
         self.n_components = n_components
@@ -137,16 +134,18 @@ class PathogenicityClassifier:
     def predict(self, data):
         return self.predict_proba(data).argmax("class")
 
-def get_rank(species, rank):
+def get_rank(species, rank, dbfile=None):
+    from ete3 import NCBITaxa
+    ncbi = NCBITaxa(dbfile=dbfile)
     for tx, rk in ncbi.get_rank(ncbi.get_lineage(species)).items():
         if rk==rank:
             return tx
     return 0
 
-def make_xarray(abundance_tables, classification):
+def make_xarray(abundance_tables, classification, dbfile=None):
     if "species" not in abundance_tables.keys():
         raise ValueError("make_xarray needs a species-level abundance table (tables for other taxonomic levels are optional)")
-    taxonomic_info = {rank:xr.DataArray(abundance_tables["species"].columns.map(lambda x: get_rank(x, rank)), {"species":abundance_tables["species"].columns}) for rank, table in abundance_tables.items() if rank!="species"}
+    taxonomic_info = {rank:xr.DataArray(abundance_tables["species"].columns.map(lambda x: get_rank(x, rank, dbfile=dbfile)), {"species":abundance_tables["species"].columns}) for rank, table in abundance_tables.items() if rank!="species"}
     abundance_tables = {f"{rank}_abundance":xr.DataArray(table, {"sample":table.index, rank:table.columns}) for rank, table in abundance_tables.items()}
     return taxonomic_info, xr.Dataset(abundance_tables | dict(classification = xr.DataArray(classification, {"sample":classification.index, "species":classification.columns})))
 
